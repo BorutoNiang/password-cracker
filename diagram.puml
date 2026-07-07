@@ -1,0 +1,42 @@
+@startuml PasswordCracker
+
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+
+interface HashCracker {
+    + crack(hash: String): String
+}
+
+class DictionaryHashCracker {
+    - DICT_PATH: String
+    + crack(hash: String): String
+}
+
+class BruteForceHashCracker {
+    - ALPHABET: String
+    - MAX_LENGTH: int
+    + crack(hash: String): String
+    - generate(hash: String, current: char[], position: int): String
+    - countCombinations(length: int): long
+}
+
+class HashCrackerFactory {
+    + {static} create(method: String): HashCracker
+}
+
+class MD5Util {
+    + {static} hash(input: String): String
+}
+
+class PasswordCracker {
+    + {static} main(args: String[]): void
+}
+
+HashCracker <|.. DictionaryHashCracker
+HashCracker <|.. BruteForceHashCracker
+HashCrackerFactory ..> HashCracker : <<creates>>
+PasswordCracker ..> HashCrackerFactory : uses
+DictionaryHashCracker ..> MD5Util : uses
+BruteForceHashCracker ..> MD5Util : uses
+
+@enduml
