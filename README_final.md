@@ -25,7 +25,7 @@ Le projet est organisé autour de 5 classes :
 | `DictionaryHashCracker` | Stratégie de cassage par dictionnaire |
 | `BruteForceHashCracker` | Stratégie de cassage par force brute |
 | `HashCrackerFactory` | Fabrique simple — crée la bonne stratégie |
-| `MD5Util` | Utilitaire de calcul de hash MD5 |
+| `HashUtils` | Utilitaire de calcul de hash MD5 |
 | `PasswordCracker` | Point d'entrée principal (main) |
 
 Le programme principal ne connaît que l'interface `HashCracker` et la fabrique. Il ne manipule jamais directement les classes concrètes.
@@ -61,9 +61,9 @@ Le programme principal ne connaît que l'interface `HashCracker` et la fabrique.
                     │ uses
                     ▼
           ┌─────────────────┐
-          │    MD5Util      │
+          │    HashUtils    │
           ├─────────────────┤
-          │+ hash(input)    │
+          │+ md5(input)     │
           │  : String       │
           └─────────────────┘
 
@@ -111,8 +111,8 @@ class HashCrackerFactory {
     + {static} create(method: String): HashCracker
 }
 
-class MD5Util {
-    + {static} hash(input: String): String
+class HashUtils {
+    + {static} md5(input: String): String
 }
 
 class PasswordCracker {
@@ -123,8 +123,8 @@ HashCracker <|.. DictionaryHashCracker
 HashCracker <|.. BruteForceHashCracker
 HashCrackerFactory ..> HashCracker : <<creates>>
 PasswordCracker ..> HashCrackerFactory : uses
-DictionaryHashCracker ..> MD5Util : uses
-BruteForceHashCracker ..> MD5Util : uses
+DictionaryHashCracker ..> HashUtils : uses
+BruteForceHashCracker ..> HashUtils : uses
 
 @enduml
 ```
@@ -173,6 +173,10 @@ Limites :
 javac src/*.java -d out
 ```
 
+![Compilation du projet](images/compilation.png)
+
+Compilation réussie sans erreur.
+
 ### Utilisation
 
 ```bash
@@ -197,6 +201,8 @@ java -cp out PasswordCracker -m DICO -h <hash_inconnu>
 # Password not found
 ```
 
+![Exécution des différents scénarios](images/execution.png)
+
 > La vidéo de démonstration est disponible ici : [lien à ajouter]
 
 ---
@@ -204,7 +210,7 @@ java -cp out PasswordCracker -m DICO -h <hash_inconnu>
 ## 7. Difficultés rencontrées
 
 - **Chemin du dictionnaire** : le fichier `dictionary.txt` doit être présent à la racine depuis laquelle la commande `java` est lancée.
-- **Hash du sujet** : le hash `e7247759c1633c0f9f1485f3690294a9` présent dans l'énoncé ne correspond pas au MD5 de "test". Le hash correct est `098f6bcd4621d373cade4e832627b4f6`.
+- **Sensibilité à la casse du hash** : la comparaison entre le hash calculé et le hash recherché doit se faire indépendamment de la casse (`equalsIgnoreCase`), sous peine de rejeter à tort un mot de passe pourtant correct si le hash fourni en argument contient des majuscules.
 - **Performance brute force** : avec 4 caractères et 26 lettres, il y a 26 + 26² + 26³ + 26⁴ = 475 254 combinaisons. Le temps d'exécution reste acceptable (~4s) mais croît exponentiellement avec la longueur.
 
 ---

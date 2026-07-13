@@ -1,21 +1,17 @@
-/**
- * Fabrique simple pour créer les stratégies de cassage de hash.
- */
+// Centralise la création des crackers : le programme principal
+// ne doit jamais faire "new DictionaryHashCracker()" ou "new BruteForceHashCracker()" lui-même.
 public class HashCrackerFactory {
 
-    /**
-     * Crée et retourne un HashCracker selon la méthode demandée.
-     * @param method "BRUTE" ou "DICO"
-     * @return l'instance correspondante
-     */
-    public static HashCracker create(String method) {
-        switch (method.toUpperCase()) {
-            case "BRUTE":
-                return new BruteForceHashCracker();
-            case "DICO":
-                return new DictionaryHashCracker();
-            default:
-                throw new IllegalArgumentException("Méthode inconnue : " + method + ". Utilisez BRUTE ou DICO.");
+    public static HashCracker create(String methode) {
+
+        if (methode.equals("DICO")) {
+            return new DictionaryHashCracker();
         }
+
+        if (methode.equals("BRUTE")) {
+            return new BruteForceHashCracker();
+        }
+
+        throw new IllegalArgumentException("Méthode inconnue : " + methode + " (BRUTE ou DICO attendu)");
     }
 }

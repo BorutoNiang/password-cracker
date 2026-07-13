@@ -24,8 +24,8 @@ class HashCrackerFactory {
     + {static} create(method: String): HashCracker
 }
 
-class MD5Util {
-    + {static} hash(input: String): String
+class HashUtils {
+    + {static} md5(input: String): String
 }
 
 class PasswordCracker {
@@ -36,7 +36,7 @@ HashCracker <|.. DictionaryHashCracker
 HashCracker <|.. BruteForceHashCracker
 HashCrackerFactory ..> HashCracker : <<creates>>
 PasswordCracker ..> HashCrackerFactory : uses
-DictionaryHashCracker ..> MD5Util : uses
-BruteForceHashCracker ..> MD5Util : uses
+DictionaryHashCracker ..> HashUtils : uses
+BruteForceHashCracker ..> HashUtils : uses
 
 @enduml

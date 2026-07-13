@@ -1,38 +1,34 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.File;
+import java.util.Scanner;
 
-/**
- * Stratégie de cassage par dictionnaire.
- * Charge un fichier de mots et compare leur hash MD5 au hash cible.
- */
+// Essaie chaque mot du fichier dictionnaire, un par un.
 public class DictionaryHashCracker implements HashCracker {
 
-    private static final String DICT_PATH = "dictionary.txt";
+    private static final String FICHIER_DICTIONNAIRE = "dictionnaire.txt";
 
-    @Override
     public String crack(String hash) {
-        long attempts = 0;
-        long start = System.currentTimeMillis();
+        try {
+            Scanner lecteur = new Scanner(new File(FICHIER_DICTIONNAIRE));
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(DICT_PATH))) {
-            String word;
-            while ((word = reader.readLine()) != null) {
-                word = word.trim();
-                if (word.isEmpty()) continue;
-                attempts++;
-                if (MD5Util.hash(word).equals(hash)) {
-                    long elapsed = System.currentTimeMillis() - start;
-                    System.out.printf("Tentatives : %d | Temps : %d ms%n", attempts, elapsed);
-                    return word;
+            while (lecteur.hasNextLine()) {
+                String motCandidat = lecteur.nextLine().trim();
+
+                if (motCandidat.isEmpty()) {
+                    continue;
+                }
+
+                if (HashUtils.md5(motCandidat).equalsIgnoreCase(hash)) {
+                    lecteur.close();
+                    return motCandidat;
                 }
             }
-        } catch (IOException e) {
-            System.err.println("Erreur lecture dictionnaire : " + e.getMessage());
+
+            lecteur.close();
+
+        } catch (Exception e) {
+            System.out.println("Erreur : dictionnaire introuvable (" + FICHIER_DICTIONNAIRE + ")");
         }
 
-        long elapsed = System.currentTimeMillis() - start;
-        System.out.printf("Tentatives : %d | Temps : %d ms%n", attempts, elapsed);
         return null;
     }
 }
