@@ -189,21 +189,21 @@ java -cp out PasswordCracker -m BRUTE -h <hash_md5>
 ```bash
 # Hash MD5 de "test" = 098f6bcd4621d373cade4e832627b4f6
 
-java -cp out PasswordCracker -m DICO -h 098f6bcd4621d373cade4e832627b4f6
+java PasswordCracker -m DICO -h 098f6bcd4621d373cade4e832627b4f6
 # Tentatives : 7 | Temps : 155 ms
 # Password found: test
 
-java -cp out PasswordCracker -m BRUTE -h 098f6bcd4621d373cade4e832627b4f6
+java PasswordCracker -m BRUTE -h 098f6bcd4621d373cade4e832627b4f6
 # Tentatives : ~475254 | Temps : 4456 ms
 # Password found: test
 
-java -cp out PasswordCracker -m DICO -h <hash_inconnu>
+java PasswordCracker -m DICO -h <hash_inconnu>
 # Password not found
 ```
 
 ![Exécution des différents scénarios](images/execution.png)
 
-> La vidéo de démonstration est disponible ici : [lien à ajouter]
+> La vidéo de démonstration est disponible  dans le depo github suivant : https://github.com/BorutoNiang/password-cracker
 
 ---
 
